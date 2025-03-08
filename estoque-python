@@ -1,0 +1,81 @@
+class ItemEstoque:
+    def __init__(self, nome, quantidade, preco):
+        self.nome = nome
+        self.quantidade = quantidade
+        self.preco = preco
+
+    def __str__(self):
+        return f"{self.nome} - Quantidade: {self.quantidade} - Preço: R${self.preco:.2f}"
+
+class GerenciadorEstoque:
+    def __init__(self):
+        self.estoque = []
+
+    def adicionar_item(self, nome, quantidade, preco):
+        for item in self.estoque:
+            if item.nome == nome:
+                item.quantidade += quantidade
+                print(f"Quantidade de {nome} atualizada para {item.quantidade}.")
+                return
+        novo_item = ItemEstoque(nome, quantidade, preco)
+        self.estoque.append(novo_item)
+        print(f"{nome} adicionado ao estoque.")
+
+    def remover_item(self, nome, quantidade):
+        for item in self.estoque:
+            if item.nome == nome:
+                if item.quantidade >= quantidade:
+                    item.quantidade -= quantidade
+                    print(f"Quantidade de {nome} reduzida para {item.quantidade}.")
+                    if item.quantidade == 0:
+                        self.estoque.remove(item)
+                        print(f"{nome} removido do estoque.")
+                else:
+                    print(f"Quantidade insuficiente de {nome} no estoque.")
+                return
+        print(f"{nome} não encontrado no estoque.")
+
+    def listar_estoque(self):
+        if not self.estoque:
+            print("O estoque está vazio.")
+        else:
+            print("Itens no estoque:")
+            for item in self.estoque:
+                print(item)
+
+    def valor_total_estoque(self):
+        total = sum(item.quantidade * item.preco for item in self.estoque)
+        print(f"Valor total do estoque: R${total:.2f}")
+
+def menu():
+    gerenciador = GerenciadorEstoque()
+    while True:
+        print("\n--- Gerenciador de Estoque ---")
+        print("1. Adicionar item")
+        print("2. Remover item")
+        print("3. Listar estoque")
+        print("4. Valor total do estoque")
+        print("5. Sair")
+        opcao = input("Escolha uma opção: ")
+
+        if opcao == "1":
+            nome = input("Nome do item: ")
+            quantidade = int(input("Quantidade: "))
+            preco = float(input("Preço unitário: "))
+            gerenciador.adicionar_item(nome, quantidade, preco)
+        elif opcao == "2":
+            nome = input("Nome do item: ")
+            quantidade = int(input("Quantidade a remover: "))
+            gerenciador.remover_item(nome, quantidade)
+        elif opcao == "3":
+            gerenciador.listar_estoque()
+        elif opcao == "4":
+            gerenciador.valor_total_estoque()
+        elif opcao == "5":
+            print("Saindo...")
+            break
+        else:
+            print("Opção inválida. Tente novamente.")
+            
+if __name__ == "__main__":
+    menu()
